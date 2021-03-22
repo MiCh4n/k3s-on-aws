@@ -16,10 +16,10 @@ spec:
       tty: true
       volumeMounts:
         - name: aws-creds
-          mountPath: ~/.aws/credentials
+          mountPath: /var/secrets/aws
       env:
         - name: AWS_SHARED_CREDENTIALS_FILE
-          value: ~/.aws/credentials
+          value: /var/secrets/aws/credentials
       resources:
         limits:
           memory: "512Mi"
