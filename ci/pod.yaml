@@ -4,12 +4,22 @@ metadata:
   labels:
     name: terraform
 spec:
+  volumes:
+    - name: aws-creds
+      secret:
+        secretName: aws-creds
   containers:
     - name: terraform
       image: hashicorp/terraform:0.12.21
       command:
         - cat
       tty: true
+      volumeMounts:
+        - name: aws-creds
+          mountPath: /var/secrets/aws
+      env:
+        - name: AWS_SHARED_CREDENTIALS_FILE
+          value: /var/secrets/aws/credentials
       resources:
         limits:
           memory: "512Mi"
