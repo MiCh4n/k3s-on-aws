@@ -17,7 +17,6 @@ pipeline {
 
                 terraform init
                 terraform plan -out tf.plan
-                ls ~/.aws/ && cat ~/.aws/credentials
                 '''
             stash name: 'terraform-plan', includes: '.terraform/,tf.plan'
         }
