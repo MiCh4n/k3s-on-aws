@@ -21,7 +21,7 @@
           url: https://get.k3s.io
           dest: /home/k3s/script.sh
       - name: Execute script
-        shell: sh /home/k3s/script.sh
+        shell: K3S_KUBECONFIG_MODE="644" sh /home/k3s/script.sh 
       - name: Install git
         apt:
           name:

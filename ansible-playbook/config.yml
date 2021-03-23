@@ -2,4 +2,5 @@
   - name: Configure k3s on remote host
     hosts: bar
     tasks:
-      
+      - name: foo
+        shell: echo "bar"
