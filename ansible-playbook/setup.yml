@@ -1,0 +1,45 @@
+---
+  - name: Setup k3s on remote host
+    hosts: foo
+    become: yes
+    tasks:
+      - name: Add user 'k3s'
+        user:
+          state: present
+          createhome: yes
+          home: /home/k3s
+          shell: /bin/bash
+          name: k3s
+          group: sudo
+      - name: Add SSH public key
+        authorized_key:
+          user: k3s
+          state: present
+          key: "{{ lookup('file', '/home/yuli/.ssh/k3s.pub') }}"
+      - name: Download script
+        get_url:
+          url: https://get.k3s.io
+          dest: /home/k3s/script.sh
+      - name: Execute script
+        shell: sh /home/k3s/script.sh
+      - name: Install git
+        apt:
+          name:
+            - git
+          state: latest
+      - name: Download kustomize
+        get_url:
+          url: https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.0.5/kustomize_v4.0.5_linux_amd64.tar.gz
+          dest: /home/k3s/kustomize.tar.gz
+      - name: Unarchive kustomize archive
+        unarchive:
+          src: /home/k3s/kustomize.tar.gz
+          dest: /usr/local/bin
+          remote_src: yes
+      - name: Cleanup
+        file:
+          path: "{{ item }}"
+          state: absent
+        with_items:
+          - /home/k3s/kustomize.tar.gz
+          - /home/k3s/script.sh
