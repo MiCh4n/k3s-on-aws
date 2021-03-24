@@ -1,0 +1,16 @@
+---
+  - name: Configure k3s on remote host
+    hosts: bar
+    tasks:
+      - name: Clone repository for k8s-sea
+        become: yes
+        git:
+          repo: 'https://github.com/mich4n/electricity'
+          dest: /home/k3s/manifests
+      - name: Deploy to cluster
+        shell: cd /home/k3s/manifests/consul/dev && kustomize build | kubectl apply -f-
+      - name: Cleanup
+        become: yes
+        file:
+          path: /home/k3s/manifests
+          state: absent

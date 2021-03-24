@@ -22,11 +22,23 @@
           dest: /home/k3s/script.sh
       - name: Execute script
         shell: K3S_KUBECONFIG_MODE="644" sh /home/k3s/script.sh 
-      - name: Install git
+      - name: Install ufw and git
         apt:
           name:
             - git
+            - ufw
           state: latest
+      - name: Download helm
+        get_url:
+          url: https://get.helm.sh/helm-v3.5.3-linux-amd64.tar.gz
+          dest: /home/k3s/helm.tar.tz
+      - name: Unarchive helm archive
+        unarchive:
+          src: /home/k3s/helm.tar.tz
+          dest: /usr/local/bin
+          remote_src: yes
+      - name: Move helm binary
+        shell: mv /usr/local/bin/linux-amd64/helm /usr/local/bin
       - name: Download kustomize
         get_url:
           url: https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.0.5/kustomize_v4.0.5_linux_amd64.tar.gz
@@ -41,5 +53,7 @@
           path: "{{ item }}"
           state: absent
         with_items:
+          - /usr/local/bin/linux-amd64
+          - /home/k3s/helm.tar.tz
           - /home/k3s/kustomize.tar.gz
           - /home/k3s/script.sh
