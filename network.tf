@@ -27,6 +27,34 @@ resource "aws_security_group" "allow_ssh" {
   }]
 }
 
+resource "aws_security_group" "allow_http" {
+  name        = "allow_http"
+  description = "Allow http inbound traffic"
+  vpc_id      = aws_vpc.kubernetes.id
+
+  ingress = [{
+    cidr_blocks      = ["0.0.0.0/0"]
+    description      = "http"
+    from_port        = 80
+    ipv6_cidr_blocks = null
+    prefix_list_ids  = null
+    protocol         = "tcp"
+    security_groups  = null
+    self             = false
+    to_port          = 80
+  }]
+  egress = [{
+    cidr_blocks      = ["0.0.0.0/0"]
+    description      = null
+    from_port        = 80
+    ipv6_cidr_blocks = null
+    prefix_list_ids  = null
+    protocol         = "tcp"
+    security_groups  = null
+    self             = false
+  to_port = 80 }]
+}
+
 resource "aws_internet_gateway" "kubernetes_gateway" {
   vpc_id = aws_vpc.kubernetes.id
 }

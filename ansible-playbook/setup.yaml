@@ -22,11 +22,10 @@
           dest: /home/k3s/script.sh
       - name: Execute script
         shell: K3S_KUBECONFIG_MODE="644" sh /home/k3s/script.sh 
-      - name: Install ufw and git
+      - name: Install git
         apt:
           name:
             - git
-            - ufw
           state: latest
       - name: Download helm
         get_url:
